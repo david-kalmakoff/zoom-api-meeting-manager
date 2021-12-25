@@ -89,6 +89,10 @@ class Zoom {
 
 export default Zoom;
 
+// TODO: Remove lower testing content
+// TODO: Add functionality to edit a meeting
+// TODO: Add functionality to delete a meeting
+
 const zoomConfig = {
   apiUrl: "https://api.zoom.us/v2/users/",
   apiKey: process.env.API_KEY,
