@@ -13,7 +13,7 @@ const rp = require("request-promise");
 dotenv.config();
 
 // https://marketplace.zoom.us/docs/api-reference/zoom-api/
-class Zoom {
+export default class Zoom {
   private _config: Config;
   private _token: string;
   private _options: Options;
@@ -172,5 +172,3 @@ class Zoom {
     });
   }
 }
-
-export default Zoom;

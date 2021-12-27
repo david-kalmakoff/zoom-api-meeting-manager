@@ -1,21 +1,19 @@
 # Zoom API Meeting Manager
 
-TODO: add package to npm
-
 Javascript (NodeJS) package to easily manage Zoom meetings.
 
 ## Install Package
 
 ```
-$ npm install zoom-api-meeting-manager
+$ npm install @david-kalmakoff/zoom-api-meeting-manager
 ```
 
 ## Add Package to Project
 
 ```javascript
-const Zoom = require("zoom-api-meeting-manager");
+const Zoom = require("@david-kalmakoff/zoom-api-meeting-manager").default;
 const zoomOptions = {
-  apiUrl: "https://api.zoom.us/v2/users/",
+  apiUrl: "https://api.zoom.us/v2/",
   apiKey: "api_key",
   apiSecret: "api_secret",
   defaultTopic: "default_topic", // optional
