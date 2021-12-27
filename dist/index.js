@@ -70,7 +70,11 @@ var Zoom = /** @class */ (function () {
             json: true,
         };
     }
-    // https://marketplace.zoom.us/docs/api-reference/zoom-api/users/users
+    /**
+     * Lists users associated with account
+     * https://marketplace.zoom.us/docs/api-reference/zoom-api/users/users
+     * @return {Array[{ id, email, ... }]} Array of user objects
+     */
     Zoom.prototype.listUsers = function () {
         var _this = this;
         this._options = __assign(__assign({}, this._options), { uri: this._config.apiUrl + "users/" });
@@ -94,7 +98,11 @@ var Zoom = /** @class */ (function () {
             });
         }); });
     };
-    // https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetings
+    /**
+     * Lists meetings associated with account
+     * https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetings
+     * @return {Array[{ id, start_time, ...}]} Array of meeting objects
+     */
     Zoom.prototype.listMeetings = function () {
         var _this = this;
         this._options = __assign(__assign({}, this._options), { uri: this._config.apiUrl + "users/".concat(this._config.zoomUser, "/meetings/") });
@@ -118,7 +126,12 @@ var Zoom = /** @class */ (function () {
             });
         }); });
     };
-    // https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingdelete
+    /**
+     * Delete meeting by ID
+     * https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingdelete
+     * @param {number} id The meeting id to be deleted
+     * @return {void}
+     */
     Zoom.prototype.deleteMeeting = function (id) {
         var _this = this;
         this._options = __assign(__assign({}, this._options), { method: "DELETE", uri: this._config.apiUrl + "meetings/".concat(id) });
@@ -142,15 +155,17 @@ var Zoom = /** @class */ (function () {
             });
         }); });
     };
-    // https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingdelete
+    /**
+     * Edit meeting associated with account
+     * https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingupdate
+     * @param {object} changes Changes to be made to meeting including ID
+     * @return {void}
+     */
     Zoom.prototype.editMeeting = function (changes) {
         var _this = this;
-        this._options = __assign(__assign({}, this._options), { method: "PATCH", uri: this._config.apiUrl + "meetings/".concat(changes.id), body: {
-                topic: changes.topic ? changes.topic : "Zoom Meeting",
-                start_time: changes.start_time,
-                duration: changes.duration,
-                timezone: changes.timezone ? changes.timezone : "America/Winnipeg",
-            } });
+        this._options = __assign(__assign({}, this._options), { method: "PATCH", uri: this._config.apiUrl + "meetings/".concat(changes.id) });
+        delete changes.id;
+        this._options.body = changes;
         return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
             var res, error_4;
             return __generator(this, function (_a) {
@@ -171,7 +186,12 @@ var Zoom = /** @class */ (function () {
             });
         }); });
     };
-    // https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingcreate
+    /**
+     * Create a meeting
+     * https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingcreate
+     * @param {object} options Options create a meeting
+     * @return {void}
+     */
     Zoom.prototype.createMeeting = function (options) {
         var _this = this;
         this._options = __assign(__assign({}, this._options), { method: "POST", uri: this._config.apiUrl + "users/".concat(this._config.zoomUser, "/meetings/"), body: {

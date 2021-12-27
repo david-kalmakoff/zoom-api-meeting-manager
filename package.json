@@ -1,7 +1,8 @@
 {
   "name": "zoom-api-meeting-manager",
-  "version": "0.1.0",
-  "description": "",
+  "repository": "https://github.com/david-kalmakoff/zoom-api-meeting-manager",
+  "version": "1.0.0",
+  "description": "Javascript (NodeJS) package to easily manage Zoom meetings.",
   "main": "dist/index.js",
   "scripts": {
     "dev": "tsc -w & nodemon dist/index.js",
@@ -9,7 +10,10 @@
     "mon": "nodemon dist/index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": {
+    "name": "David Kalmakoff",
+    "email": "extendedstep@gmail.com"
+  },
   "license": "ISC",
   "dependencies": {
     "dotenv": "^10.0.0",

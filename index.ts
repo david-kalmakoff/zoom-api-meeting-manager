@@ -39,7 +39,11 @@ class Zoom {
     };
   }
 
-  // https://marketplace.zoom.us/docs/api-reference/zoom-api/users/users
+  /**
+   * Lists users associated with account
+   * https://marketplace.zoom.us/docs/api-reference/zoom-api/users/users
+   * @return {Array[{ id, email, ... }]} Array of user objects
+   */
   listUsers(): Promise<object> {
     this._options = {
       ...this._options,
@@ -56,7 +60,11 @@ class Zoom {
     });
   }
 
-  // https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetings
+  /**
+   * Lists meetings associated with account
+   * https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetings
+   * @return {Array[{ id, start_time, ...}]} Array of meeting objects
+   */
   listMeetings(): Promise<Array<Meeting>> {
     this._options = {
       ...this._options,
@@ -73,7 +81,12 @@ class Zoom {
     });
   }
 
-  // https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingdelete
+  /**
+   * Delete meeting by ID
+   * https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingdelete
+   * @param {number} id The meeting id to be deleted
+   * @return {void}
+   */
   deleteMeeting(id: number): Promise<void> {
     this._options = {
       ...this._options,
@@ -91,19 +104,22 @@ class Zoom {
     });
   }
 
-  // https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingdelete
+  /**
+   * Edit meeting associated with account
+   * https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingupdate
+   * @param {object} changes Changes to be made to meeting including ID
+   * @return {void}
+   */
   editMeeting(changes: EditBody): Promise<void> {
     this._options = {
       ...this._options,
       method: "PATCH",
       uri: this._config.apiUrl + `meetings/${changes.id}`,
-      body: {
-        topic: changes.topic ? changes.topic : "Zoom Meeting",
-        start_time: changes.start_time,
-        duration: changes.duration,
-        timezone: changes.timezone ? changes.timezone : "America/Winnipeg",
-      },
     };
+
+    delete changes.id;
+
+    this._options.body = changes;
 
     return new Promise(async (resolve, reject) => {
       try {
@@ -115,7 +131,12 @@ class Zoom {
     });
   }
 
-  // https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingcreate
+  /**
+   * Create a meeting
+   * https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingcreate
+   * @param {object} options Options create a meeting
+   * @return {void}
+   */
   createMeeting(options: CreateMeeting): Promise<object> {
     this._options = {
       ...this._options,
