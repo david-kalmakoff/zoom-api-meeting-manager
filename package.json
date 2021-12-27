@@ -1,6 +1,9 @@
 {
-  "name": "zoom-api-meeting-manager",
-  "repository": "https://github.com/david-kalmakoff/zoom-api-meeting-manager",
+  "name": "@david-kalmakoff/zoom-api-meeting-manager",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/david-kalmakoff/zoom-api-meeting-manager"
+  },
   "version": "1.0.0",
   "description": "Javascript (NodeJS) package to easily manage Zoom meetings.",
   "main": "dist/index.js",
