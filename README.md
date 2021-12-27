@@ -1,7 +1,6 @@
 # Zoom API Meeting Manager
 
 TODO: add package to npm
-TODO: clean up code and add descriptions to methods
 
 Javascript (NodeJS) package to easily manage Zoom meetings.
 
