@@ -1,4 +1,10 @@
-import { Config, Options, CreateMeeting } from "./types/Zoom";
+import {
+  Config,
+  Options,
+  CreateMeeting,
+  EditBody,
+  Meeting,
+} from "./types/Zoom";
 import * as dotenv from "dotenv";
 
 const jwt = require("jsonwebtoken");
@@ -34,16 +40,75 @@ class Zoom {
   }
 
   // https://marketplace.zoom.us/docs/api-reference/zoom-api/users/users
-  listUsers(): Promise<any> {
+  listUsers(): Promise<object> {
     this._options = {
       ...this._options,
-      uri: this._config.apiUrl,
+      uri: this._config.apiUrl + "users/",
     };
 
     return new Promise(async (resolve, reject) => {
       try {
         const res = await rp(this._options);
-        resolve(res);
+        resolve(res.users);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  // https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetings
+  listMeetings(): Promise<Array<Meeting>> {
+    this._options = {
+      ...this._options,
+      uri: this._config.apiUrl + `users/${this._config.zoomUser}/meetings/`,
+    };
+
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await rp(this._options);
+        resolve(res.meetings);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  // https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingdelete
+  deleteMeeting(id: number): Promise<void> {
+    this._options = {
+      ...this._options,
+      method: "DELETE",
+      uri: this._config.apiUrl + `meetings/${id}`,
+    };
+
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await rp(this._options);
+        resolve();
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  // https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingdelete
+  editMeeting(changes: EditBody): Promise<void> {
+    this._options = {
+      ...this._options,
+      method: "PATCH",
+      uri: this._config.apiUrl + `meetings/${changes.id}`,
+      body: {
+        topic: changes.topic ? changes.topic : "Zoom Meeting",
+        start_time: changes.start_time,
+        duration: changes.duration,
+        timezone: changes.timezone ? changes.timezone : "America/Winnipeg",
+      },
+    };
+
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await rp(this._options);
+        resolve();
       } catch (error) {
         reject(error);
       }
@@ -51,15 +116,15 @@ class Zoom {
   }
 
   // https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingcreate
-  createMeeting(options: CreateMeeting): Promise<any> {
+  createMeeting(options: CreateMeeting): Promise<object> {
     this._options = {
       ...this._options,
       method: "POST",
-      uri: this._config.apiUrl + `${this._config.zoomUser}/meetings/`,
+      uri: this._config.apiUrl + `users/${this._config.zoomUser}/meetings/`,
       body: {
-        topic: options.title ? options.title : "Zoom Meeting",
+        topic: options.topic ? options.topic : "Zoom Meeting",
         type: 2,
-        start_time: options.startTime,
+        start_time: options.start_time,
         duration: options.duration,
         default_password: true,
         timezone: options.timezone ? options.timezone : "America/Winnipeg",
@@ -70,7 +135,6 @@ class Zoom {
           waiting_room: false,
           contact_name: this._config.contactName,
           contact_email: this._config.contactEmail,
-          registrants_confirmation_email: true,
           private_meeting: true,
         },
       },
@@ -79,7 +143,8 @@ class Zoom {
     return new Promise(async (resolve, reject) => {
       try {
         const res = await rp(this._options);
-        resolve(res);
+        if (res.join_url) resolve({ url: res.join_url, id: res.id });
+        else throw { error: "Creating zoom meeting", res };
       } catch (error) {
         reject(error);
       }
@@ -88,29 +153,3 @@ class Zoom {
 }
 
 export default Zoom;
-
-// TODO: Remove lower testing content
-// TODO: Add functionality to edit a meeting
-// TODO: Add functionality to delete a meeting
-
-const zoomConfig = {
-  apiUrl: "https://api.zoom.us/v2/users/",
-  apiKey: process.env.API_KEY,
-  apiSecret: process.env.API_SECRET,
-  defaultTitle: process.env.DEFAULT_TITLE,
-  defaultTimezone: process.env.DEFAULT_TIMEZONE,
-  zoomUser: process.env.ZOOM_USER,
-  contactName: process.env.CONTACT_NAME,
-  contactEmail: process.env.CONTACT_EMAIL,
-};
-
-const zoom = new Zoom(zoomConfig);
-
-// zoom.listUsers();
-// const meeting: object = {
-//   title: "Testing - Made in Canada Mall Stage Stream",
-//   startTime: "2021-12-24T16:00:00",
-//   duration: 30,
-//   timezone: "America/Winnipeg",
-// };
-// zoom.createMeeting(meeting);

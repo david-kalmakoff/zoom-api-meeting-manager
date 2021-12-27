@@ -4,7 +4,9 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "tsc -w & nodemon dist/index.js"
+    "dev": "tsc -w & nodemon dist/index.js",
+    "ts": "tsc -w",
+    "mon": "nodemon dist/index.js"
   },
   "keywords": [],
   "author": "",

@@ -2,11 +2,28 @@ export interface Config {
   readonly apiUrl: string;
   readonly apiKey: string;
   readonly apiSecret: string;
-  readonly defaultTitle?: string;
+  readonly defaultTopic?: string;
   readonly defaultTimezone?: string;
   readonly zoomUser: string;
   readonly contactName: string;
   readonly contactEmail: string;
+}
+
+export interface Meeting {
+  readonly id: number;
+  readonly topic: string;
+  readonly start_time?: string;
+  readonly duration: number;
+  readonly join_url: string;
+  readonly timezone: string;
+}
+
+export interface EditBody {
+  id?: number;
+  topic?: string;
+  start_time?: string;
+  duration?: number;
+  timezone?: string;
 }
 
 interface Body {
@@ -23,7 +40,6 @@ interface Body {
     readonly waiting_room: boolean;
     contact_name: string;
     contact_email: string;
-    readonly registrants_confirmation_email: boolean;
     readonly private_meeting: boolean;
   };
 }
@@ -38,12 +54,12 @@ export interface Options {
   readonly json: boolean;
   uri?: string;
   method?: string;
-  body?: Body;
+  body?: Body | EditBody;
 }
 
 export interface CreateMeeting {
-  title?: string;
-  startTime: string;
+  topic?: string;
+  start_time: string;
   duration: number;
   timezone?: string;
 }

@@ -16,7 +16,7 @@ const zoomOptions = {
   apiUrl: "https://api.zoom.us/v2/users/",
   apiKey: "api_key",
   apiSecret: "api_secret",
-  defaultTitle: "default_title", // optional
+  defaultTopic: "default_topic", // optional
   defaultTimezone: "default_timezone", // optional
   zoomUser: "zoom_user",
   contactName: "contact_name",
@@ -29,7 +29,7 @@ const zoom = new Zoom(zoomOptions);
 
 ```javascript
 zoom
-  .listUsers()
+  .listUsers() // Returns array of user data objects { id, email, ... }
   .then((res) => console.log(res))
   .catch((error) => console.log(error));
 ```
@@ -38,14 +38,43 @@ zoom
 
 ```javascript
 const meeting = {
-  title: "Potential Meeting Title",
-  startTime: "2022-01-01T12:00:00",
+  topic: "Potential Meeting Title",
+  start_time: "2022-01-01T12:00:00",
   duration: 30,
   timezone: "America/Winnipeg",
 };
 
 zoom
-  .createMeeting(meeting)
+  .createMeeting(meeting) // Returns meeting object { url, id }
   .then((res) => console.log(res))
   .catch((error) => console.log(error));
+```
+
+## List Existing Meetings
+
+```javascript
+zoom
+  .listMeetings() // Returns array of meeting objects { id, start_time, ... }
+  .then((res) => console.log(res))
+  .catch((error) => console.log(error));
+```
+
+## Delete Meeting
+
+```javascript
+zoom.deleteMeeting(meetingID).catch((error) => console.log(error));
+```
+
+## Edit Meeting
+
+```javascript
+const editMeeting = {
+  id: meetingID, // Required
+  topic: "New Potential Meeting Title", // Optional
+  start_time: "2022-01-02T12:00:00", // Optional
+  duration: 30, // Optional
+  timezone: "America/Winnipeg", // Optional
+};
+
+zoom.editMeeting(editMeeting).catch((error) => console.log(error));
 ```
